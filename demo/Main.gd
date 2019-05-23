@@ -20,7 +20,9 @@ func _on_Button_pressed():
 	var f = File.new()
 	if (f.open("res://protocol.spb", File.READ)) == OK:
 		var buffer = f.get_buffer(f.get_len())
-		sproto.newsproto(buffer)
+		var tmp = Array(buffer)
+		sproto.newsproto(tmp)
+		f.close()
 	pass # Replace with function body.
 
 
@@ -54,8 +56,8 @@ func _on_Button3_pressed():
 	for i in range(1000000):
 		var bytes = sproto.encode("auth.Player", player)
 		#print("bytes=", bytes)
-		#var newBytes = bytes.subarray(0, bytes.size()-1)
-		#var result = sproto.decode("auth.Player", bytes)
+		var newBytes = Array(bytes)
+		var result = sproto.decode("auth.Player", newBytes)
 	
 	var enddt = OS.get_unix_time()
 	var interval = enddt - unixdt
@@ -65,4 +67,25 @@ func _on_Button3_pressed():
 
 
 func _on_Button4_pressed():
+	var player = {
+		"playerid" : 135469,
+		"nickname" : "张三",
+		"headid" : 1001,
+		"headurl" : "http://img.52z.com/upload/news/image/20181108/20181108204521_83402.jpg",
+		"sex":0,
+		"isvip":true,
+		"gold":10003801,
+		"signs": [false, true, true, true, true, false],
+		"pets":[13001, 13002, 13003, 13004],
+		"mails":["tx 第一个", "alibaba 第二", "wangyi 第三"],
+		"friends": {
+			"zhangsan" : { "playerid": 13001, "nickname": "zhangsan" },
+			"lishi" : { "playerid": 13002, "nickname": "lishi" },
+			"lihui" : { "playerid": 13003, "nickname": "lihui" },
+			"wangwu" : { "playerid": 13004, "nickname": "wangwu" },
+		},
+		"money":123.87,
+		"master": { "playerid": 13004, "nickname": "wangwu" }
+	}
+	sproto.test("auth.player", player)
 	pass # Replace with function body.
