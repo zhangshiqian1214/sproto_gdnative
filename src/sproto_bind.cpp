@@ -368,6 +368,7 @@ static int decode_callback(const struct sproto_arg *args) {
 Variant godot::Sproto::decode(const String name, const Array inputArr)
 {
 	Variant result;
+	
 	PoolByteArray buffer(inputArr);
 	struct sproto_type * st = get_sproto_type(name);
 	if (st == NULL) {
@@ -388,7 +389,10 @@ Variant godot::Sproto::decode(const String name, const Array inputArr)
 		Godot::print_error("decode error", "decode", __FILE__, __LINE__);
 		return result;
 	}
-	result = self.result;
+	Array tmp;
+	tmp.push_back(self.result);
+	tmp.push_back(ret);
+	result = tmp;
 	
 	return result;
 }
@@ -509,10 +513,10 @@ Variant godot::Sproto::protocol(const Variant name)
 	return result;
 }
 
-Variant godot::Sproto::test(const String name, const Dictionary data)
+Variant godot::Sproto::test(const String name, const Array buffer)
 {
-	Variant result = data;
-	Godot::print(result.operator godot::String());
+	Variant result;
+	//Godot::print(result.operator godot::String());
 
 
 	/*struct sproto_type * st = get_sproto_type(name);

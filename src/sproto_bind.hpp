@@ -42,7 +42,7 @@ namespace godot {
 
 		Variant protocol(const Variant name);
 
-		Variant test(const String name, const Dictionary data);
+		Variant test(const String name, const Array buffer);
 	};
 
 }
