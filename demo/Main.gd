@@ -53,11 +53,12 @@ func _on_Button3_pressed():
 	}
 	
 	var unixdt = OS.get_unix_time()
-	for i in range(1000000):
+# warning-ignore:unused_variable
+	for i in range(10000):
 		var bytes = sproto.encode("auth.Player", player)
-		#print("bytes=", bytes)
 		var newBytes = Array(bytes)
 		var result = sproto.decode("auth.Player", newBytes)
+#		print(result)
 	
 	var enddt = OS.get_unix_time()
 	var interval = enddt - unixdt
@@ -87,5 +88,11 @@ func _on_Button4_pressed():
 		"money":123.87,
 		"master": { "playerid": 13004, "nickname": "wangwu" }
 	}
-	sproto.test("auth.player", player)
+	
+	
+	for i in range(10000):
+		var buffer = Array()
+		buffer.resize(1024)
+		sproto.test("auth.player", buffer)
+	
 	pass # Replace with function body.
