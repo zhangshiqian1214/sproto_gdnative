@@ -114,10 +114,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>E:\GithubProj\sproto_gdnative\godot-cpp\godot_headers;E:\GithubProj\sproto_gdnative\godot-cpp\include;E:\GithubProj\sproto_gdnative\godot-cpp\include\core;E:\GithubProj\sproto_gdnative\godot-cpp\include\gen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>godot-cpp\godot_headers;godot-cpp\include;godot-cpp\include\core;godot-cpp\include\gen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>E:\GithubProj\sproto_gdnative\godot-cpp\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>godot-cpp\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libgodot-cpp.windows.debug.64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -27,9 +27,8 @@ Sproto::~Sproto()
 	}
 }
 
-void godot::Sproto::newsproto(const Array inputArr)
+void godot::Sproto::newsproto(const PoolByteArray buffer)
 {
-	PoolByteArray buffer(inputArr);
 	PoolByteArray::Read r = buffer.read();
 	const uint8_t * ptr = r.ptr();
 	int sz = buffer.size();
@@ -39,7 +38,7 @@ void godot::Sproto::newsproto(const Array inputArr)
 		return;
 	}
 	m_sproto = sp;
-
+	Godot::print("sproto:newsproto create sproto ok");
 	return;
 }
 
@@ -49,7 +48,9 @@ void godot::Sproto::dumpsproto()
 		Godot::print_error("sproto is NULL", "dumpsproto", __FILE__, __LINE__);
 		return;
 	}
+	Godot::print("sproto:dumpsproto ============begin=================");
 	sproto_dump(m_sproto);
+	Godot::print("sproto:dumpsproto ============end=================");
 }
 
 struct sproto_type * godot::Sproto::get_sproto_type(const String & name)
@@ -199,9 +200,9 @@ static int encode_callback(const struct sproto_arg * args) {
 	return SPROTO_CB_ERROR;
 }
 
-Variant godot::Sproto::encode(const String name, const Dictionary data)
+PoolByteArray godot::Sproto::encode(const String name, const Dictionary data)
 {
-	Variant result;
+	PoolByteArray result;
 	
 	struct sproto_type * st = get_sproto_type(name);
 	if (st == NULL) {
@@ -229,9 +230,11 @@ Variant godot::Sproto::encode(const String name, const Dictionary data)
 			m_encodeBuffer.resize(m_encodeBuffer.size() * 2);
 		}
 		else {
-			PoolByteArray tmp(m_encodeBuffer);
-			tmp.resize(r);
-			result = tmp;
+			//PoolByteArray tmp(m_encodeBuffer);
+			//tmp.resize(r);
+			//result = tmp;
+			result = m_encodeBuffer;
+			result.resize(r);
 			return result;
 		}
 	}
@@ -365,11 +368,10 @@ static int decode_callback(const struct sproto_arg *args) {
 	return 0;
 }
 
-Variant godot::Sproto::decode(const String name, const Array inputArr)
+Dictionary godot::Sproto::decode(const String name, const PoolByteArray buffer)
 {
-	Variant result;
+	Dictionary result;
 	
-	PoolByteArray buffer(inputArr);
 	struct sproto_type * st = get_sproto_type(name);
 	if (st == NULL) {
 		Godot::print_error("this sproto type is NULL", "decode", __FILE__, __LINE__);
@@ -389,10 +391,8 @@ Variant godot::Sproto::decode(const String name, const Array inputArr)
 		Godot::print_error("decode error", "decode", __FILE__, __LINE__);
 		return result;
 	}
-	Array tmp;
-	tmp.push_back(self.result);
-	tmp.push_back(ret);
-	result = tmp;
+	result["size"] = ret;
+	result["data"] = self.result;
 	
 	return result;
 }
@@ -406,10 +406,9 @@ static void expand_buffer(PoolByteArray & buffer, int nsz) {
 	buffer.resize(nsz);
 }
 
-Variant godot::Sproto::pack(const Array inputArr)
+PoolByteArray godot::Sproto::pack(const PoolByteArray buffer)
 {
-	Variant result;
-	PoolByteArray buffer(inputArr);
+	PoolByteArray result;
 	int bytes;
 	int sz = buffer.size();
 	int maxsz = (sz + 2047) / 2048 * 2 + sz;
@@ -424,19 +423,17 @@ Variant godot::Sproto::pack(const Array inputArr)
 		Godot::print_error("pack err, return size = " + String::num(bytes) + ", max size limit " + String::num(ENCODE_MAXSIZE), "pack", __FILE__, __LINE__);
 		return result;
 	}
-	PoolByteArray tmpBuffer = PoolByteArray();
-	tmpBuffer.resize(bytes);
-	PoolByteArray::Write w = tmpBuffer.write();
+
+	result.resize(bytes);
+	PoolByteArray::Write w = result.write();
 	memcpy(w.ptr(), m_packBuffer.read().ptr(), bytes);
-	result = tmpBuffer;
 
 	return result;
 }
 
-Variant godot::Sproto::unpack(const Array inputArr)
+PoolByteArray godot::Sproto::unpack(const PoolByteArray buffer)
 {
-	Variant result;
-	PoolByteArray buffer(inputArr);
+	PoolByteArray result;
 	int ret = 0;
 	int sz = buffer.size();
 	int osz = m_unpackBuffer.size();
@@ -459,10 +456,8 @@ Variant godot::Sproto::unpack(const Array inputArr)
 		Godot::print_error("Invalid unpack stream", "unpack", __FILE__, __LINE__);
 		return result;
 	}
-	PoolByteArray tmpBuf = PoolByteArray();
-	tmpBuf.resize(ret);
-	memcpy(tmpBuf.write().ptr(), m_unpackBuffer.read().ptr(), ret);
-	result = tmpBuf;
+	result.resize(ret);
+	memcpy(result.write().ptr(), m_unpackBuffer.read().ptr(), ret);
 	return result;
 }
 

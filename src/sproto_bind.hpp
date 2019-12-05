@@ -33,12 +33,12 @@ namespace godot {
 		Sproto();
 		~Sproto();
 
-		void newsproto(const Array buffer);
+		void newsproto(const PoolByteArray buffer);
 		void dumpsproto();
-		Variant encode(const String name, const Dictionary data);
-		Variant decode(const String name, const Array buffer);
-		Variant pack(const Array buffer);
-		Variant unpack(const Array buffer);
+		PoolByteArray encode(const String name, const Dictionary data);
+		Dictionary decode(const String name, const PoolByteArray buffer);
+		PoolByteArray pack(const PoolByteArray buffer);
+		PoolByteArray unpack(const PoolByteArray buffer);
 
 		Variant protocol(const Variant name);
 

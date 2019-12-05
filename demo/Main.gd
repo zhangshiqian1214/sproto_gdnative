@@ -54,10 +54,10 @@ func _on_Button3_pressed():
 	
 	var unixdt = OS.get_unix_time()
 # warning-ignore:unused_variable
-	for i in range(10000):
+	for i in range(500000):
 		var bytes = sproto.encode("auth.Player", player)
-		var newBytes = Array(bytes)
-		var result = sproto.decode("auth.Player", newBytes)
+#		var newBytes = Array(bytes)
+		var result = sproto.decode("auth.Player", bytes)
 #		print(result)
 	
 	var enddt = OS.get_unix_time()
