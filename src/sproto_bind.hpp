@@ -34,15 +34,13 @@ namespace godot {
 		~Sproto();
 
 		void newsproto(const PoolByteArray buffer);
+		void deletesproto();
 		void dumpsproto();
 		PoolByteArray encode(const String name, const Dictionary data);
 		Dictionary decode(const String name, const PoolByteArray buffer);
 		PoolByteArray pack(const PoolByteArray buffer);
 		PoolByteArray unpack(const PoolByteArray buffer);
-
-		Variant protocol(const Variant name);
-
-		Variant test(const String name, const Array buffer);
+		Dictionary protocol(const Variant name);
 	};
 
 }

@@ -42,6 +42,15 @@ void godot::Sproto::newsproto(const PoolByteArray buffer)
 	return;
 }
 
+void godot::Sproto::deletesproto() {
+	if (m_sproto == NULL) {
+		Godot::print_error("sproto not create", "deletesproto", __FILE__, __LINE__);
+	}
+	sproto_release(m_sproto);
+	m_sproto = NULL;
+	Godot::print("sproto:deletesproto delete sproto ok");
+}
+
 void godot::Sproto::dumpsproto()
 {
 	if (m_sproto == NULL) {
@@ -461,9 +470,9 @@ PoolByteArray godot::Sproto::unpack(const PoolByteArray buffer)
 	return result;
 }
 
-Variant godot::Sproto::protocol(const Variant name)
+Dictionary godot::Sproto::protocol(const Variant name)
 {
-	Variant result;
+	Dictionary result;
 	int tag;
 	const char * pname;
 	struct sproto_type * request;
@@ -491,41 +500,19 @@ Variant godot::Sproto::protocol(const Variant name)
 	else {
 		return result;
 	}
-	result = Dictionary();
-	result.operator godot::Dictionary()["pname"] = String(pname);
-	result.operator godot::Dictionary()["tag"] = tag;
+	result["pname"] = String(pname);
+	result["tag"] = tag;
+	
 
 	request = sproto_protoquery(m_sproto, tag, SPROTO_REQUEST);
 	if (request != NULL) {
-		result.operator godot::Dictionary()["request"] = String(pname) + ".request";
+		result["request"] = String(pname) + ".request";
 	}
 
 	response = sproto_protoquery(m_sproto, tag, SPROTO_RESPONSE);
 	if (response == NULL) {
-		result.operator godot::Dictionary()["response"] = String(pname) + ".response";
+		result["response"] = String(pname) + ".response";
 	}
-
-	return result;
-}
-
-Variant godot::Sproto::test(const String name, const Array buffer)
-{
-	Variant result;
-	//Godot::print(result.operator godot::String());
-
-
-	/*struct sproto_type * st = get_sproto_type(name);
-	if (st == NULL) {
-		Godot::print_error("this sproto type is NULL", "encode", __FILE__, __LINE__);
-		return result;
-	}
-
-	struct encode_ud self;
-	memset(&self, 0x00, sizeof(struct encode_ud));
-	self.tbl = Variant(data);
-
-	result = m_encodeBuffer;
-	result.operator godot::PoolByteArray().resize(24);*/
 
 	return result;
 }
@@ -533,11 +520,14 @@ Variant godot::Sproto::test(const String name, const Array buffer)
 
 void Sproto::_init()
 {
-	printf("sproto::_init()\n");
+	
 }
 
 void Sproto::_register_methods() {
+
 	register_method("newsproto", &Sproto::newsproto);
+
+	register_method("deletesproto", &Sproto::deletesproto);
 	
 	register_method("dumpsproto", &Sproto::dumpsproto);
 	
@@ -550,7 +540,5 @@ void Sproto::_register_methods() {
 	register_method("unpack", &Sproto::unpack);
 
 	register_method("protocol", &Sproto::protocol);
-
-	register_method("test", &Sproto::test);
 	
 }
