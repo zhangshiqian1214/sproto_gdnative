@@ -502,16 +502,17 @@ Dictionary godot::Sproto::protocol(const Variant name)
 	}
 	result["pname"] = String(pname);
 	result["tag"] = tag;
-	
+	result["request"] = String(pname) + ".request";
+	result["response"] = String(pname) + ".response";
 
 	request = sproto_protoquery(m_sproto, tag, SPROTO_REQUEST);
 	if (request != NULL) {
-		result["request"] = String(pname) + ".request";
+		result["request"] = String(sproto_name(request));
 	}
 
 	response = sproto_protoquery(m_sproto, tag, SPROTO_RESPONSE);
-	if (response == NULL) {
-		result["response"] = String(pname) + ".response";
+	if (response != NULL) {
+		result["response"] = String(sproto_name(response));
 	}
 
 	return result;

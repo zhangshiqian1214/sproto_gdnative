@@ -9,7 +9,7 @@ onready var sproto = Sproto.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():		
-	pass # Replace with function body.
+	var _client = WebSocketClient.new()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -23,12 +23,10 @@ func _on_Button_pressed():
 		var tmp = Array(buffer)
 		sproto.newsproto(tmp)
 		f.close()
-	pass # Replace with function body.
 
 
 func _on_Button2_pressed():
 	sproto.dumpsproto()
-	pass # Replace with function body.
 
 func _on_Button3_pressed():
 	var player = {
@@ -56,7 +54,6 @@ func _on_Button3_pressed():
 # warning-ignore:unused_variable
 	for i in range(500000):
 		var bytes = sproto.encode("auth.Player", player)
-#		var newBytes = Array(bytes)
 		var result = sproto.decode("auth.Player", bytes)
 #		print(result)
 	
@@ -64,7 +61,6 @@ func _on_Button3_pressed():
 	var interval = enddt - unixdt
 	print("用时:", interval)
 	#print("result=", result)
-	pass # Replace with function body.
 
 
 func _on_Button4_pressed():
@@ -95,4 +91,3 @@ func _on_Button4_pressed():
 		buffer.resize(1024)
 		sproto.test("auth.player", buffer)
 	
-	pass # Replace with function body.
